@@ -1,3 +1,3 @@
-# @tallman/core-lib
+# @tallman5/core-js
 
-This library contains basic functionality and reusable services for web projects.
+This library contains basic JavaScript/TypeScript functionality and reusable services for web projects.
