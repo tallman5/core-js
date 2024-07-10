@@ -1,2 +1,3 @@
-const message: string = 'Hello, TypeScript!';
-console.log(message);
+export * from './event-emitter';
+export * from './notifications';
+export * from './utilities';

@@ -21,5 +21,8 @@
     "@types/node": "^20.14.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.50.0"
   }
 }
