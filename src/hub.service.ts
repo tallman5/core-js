@@ -12,6 +12,8 @@ export class HubServiceBase {
         this.notificationsService = new NotificationsService(this.eventEmitter);
         this.appUserService = new AppUserService(this.eventEmitter, this.notificationsService);
 
+        // Adding a note
+        
         // Setup event listeners
         // this.eventEmitter.on(Events.AppUserChanged, (newDetails: IAppUser) => {
         //     this.searchService.handleAppUserChange(newDetails);
