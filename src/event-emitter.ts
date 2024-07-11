@@ -1,8 +1,8 @@
 export type EventHandler = (...args: any[]) => void;
 
 export enum Events {
-    AppUserChanged,
-    NotificationAdded, NotificationDeleted, NotificationsCleared, NotificationsUpdated,
+    AppUserChanged, 
+    NotificationsUpdated,
 };
 
 export class EventEmitter {

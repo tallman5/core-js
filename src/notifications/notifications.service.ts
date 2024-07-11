@@ -17,17 +17,17 @@ export class NotificationsService {
         return newId;
     };
 
-    clearMessages() {
+    clearNotifications() {
         this.notifications = [];
         this.eventEmitter.emit(Events.NotificationsUpdated, [...this.notifications]);
     };
 
-    deleteMessage(id: number): void {
+    deleteNotification(id: number): void {
         this.notifications = this.notifications.filter(n => id !== n.id);
         this.eventEmitter.emit(Events.NotificationsUpdated, [...this.notifications]);
     };
 
-    getMessages(): INotification[] {
+    getNotifications(): INotification[] {
         return this.notifications;
     };
 };
