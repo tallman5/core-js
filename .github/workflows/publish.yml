@@ -24,15 +24,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Bump version and create a git tag
-        id: bump_version
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
-          npm version patch -m "Bump version to %s [skip ci]"
-          git push --follow-tags
-
       - name: Publish to NPM
         run: npm publish
         env:
