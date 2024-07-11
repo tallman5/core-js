@@ -20,12 +20,21 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Bump version
+      - name: Run tests
+        run: npm test
+        
+      - name: Bump version and create a git tag
+        id: bump_version
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git config --global user.email "joseph@mcgurkin.net"
-          git config --global user.name "tallman5"
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
           npm version patch -m "Bump version to %s [skip ci]"
-          git push origin HEAD:main
+          git add .
+          git commit -m "Commit changes after version bump [skip ci]"
+          git push origin HEAD:main --follow-tags
 
       - name: Publish to NPM
         run: |
