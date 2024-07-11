@@ -23,11 +23,11 @@ jobs:
 
       - name: Run tests
         run: npm test
-        
+
       - name: Bump version and create a git tag
         id: bump_version
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
