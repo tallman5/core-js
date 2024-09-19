@@ -1,0 +1,217 @@
+{
+	"name": "klipper-gcode",
+	"scopeName": "source.klipper-gcode",
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#template"
+		},
+		{
+			"include": "#command"
+		},
+		{
+			"include": "#macro"
+		}
+	],
+	"repository": {
+		"comment": {
+			"name": "comment.line.klipper-gcode",
+			"begin": "[#;]",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.begin.comment.line.klipper-gcode"
+				}
+			},
+			"end": "(?=[\\r\\n])"
+		},
+		"command": {
+			"name": "meta.gcode-command.klipper-gcode",
+			"begin": "^\\s*([GMT])[0-9]{1,3}",
+			"beginCaptures": {
+				"0": {
+					"name": "entity.name.function.gcode-command.$1.klipper-gcode"
+				}
+			},
+			"end": "[\\r\\n]",
+			"patterns": [
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#macroParameter"
+				},
+				{
+					"include": "#parameter"
+				},
+				{
+					"include": "#template"
+				}
+			]
+		},
+		"parameter": {
+			"patterns": [
+				{
+					"name": "constant.numeric.$1.klipper-gcode",
+					"match": "([SPXYZUVWIJDHFRQEN])([-.0-9]+)",
+					"captures": {
+						"1": {
+							"name": "meta.parameter-specifier.klipper-gcode"
+						},
+						"2": {
+							"name": "meta.parameter-value.klipper-gcode"
+						}
+					}
+				},
+				{
+					"name": "constant.numeric.$1.klipper-gcode",
+					"match": "([SPXYZUVWIJDHFRQEN])(?=\\{)",
+					"captures": {
+						"0": {
+							"name": "meta.parameter-specifier.klipper-gcode"
+						}
+					}
+				}
+			]
+		},
+		"boolLiteral": {
+			"name": "constant.language.boolean.klipper-gcode",
+			"match": "\\b[Tt]rue|[Ff]alse\\b"
+		},
+		"numericLiteral": {
+			"name": "constant.numeric.klipper-cfg",
+			"match": "(-)?(?:[0-9]|(\\.)[0-9])+",
+			"captures": {
+				"1": {
+					"name": "keyword.operator.negative.klipper-cfg"
+				},
+				"2": {
+					"name": "meta.delimiter.decimal.period.klipper-cfg"
+				}
+			}
+		},
+		"stringLiteral": {
+			"name": "string.klipper-gcode",
+			"begin": "\"",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.klipper-gcode"
+				}
+			},
+			"end": "(?<!\\\\)(\")|\\\\\\\\(\")",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.string.end.klipper-gcode"
+				},
+				"2": {
+					"name": "punctuation.definition.string.end.klipper-gcode"
+				}
+			}
+		},
+		"macro": {
+			"name": "meta.macro-invocation.klipper-gcode",
+			"begin": "[_a-zA-Z][_a-zA-Z0-9]*",
+			"beginCaptures": {
+				"0": {
+					"name": "entity.name.function.preprocessor.klipper-gcode"
+				}
+			},
+			"end": "[\\r\\n]",
+			"patterns": [
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#macroParameter"
+				},
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#template"
+				}
+			]
+		},
+		"macroParameter": {
+			"name": "meta.parameter.klipper-gcode",
+			"begin": "([_a-zA-Z][_a-zA-Z0-9]*)(=)",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.parameter.klipper-gcode"
+				},
+				"2": {
+					"name": "keyword.operator.assignment.klipper-gcode"
+				}
+			},
+			"end": "(?=\\s)",
+			"patterns": [
+				{
+					"include": "#stringLiteral"
+				},
+				{
+					"include": "#numericLiteral"
+				},
+				{
+					"include": "#boolLiteral"
+				},
+				{
+					"include": "#template"
+				},
+				{
+					"include": "#comment"
+				},
+				{
+					"name": "variable.other.klipper-gcode",
+					"match": "[_a-zA-Z][_a-zA-Z0-9]*"
+				}
+			]
+		},
+		"template": {
+			"patterns": [
+				{
+					"name": "meta.jinja2.conditional.klipper-gcode",
+					"begin": "\\{%",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.template-expression.begin.klipper-gcode"
+						}
+					},
+					"end": "%\\}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.template-expression.end.klipper-gcode"
+						}
+					},
+					"contentName": "source.klipper-script",
+					"patterns": [
+						{
+							"include": "source.klipper-script"
+						}
+					]
+				},
+				{
+					"name": "meta.jinja2.expression.klipper-gcode",
+					"begin": "\\{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.template-expression.begin.klipper-gcode"
+						}
+					},
+					"end": "\\}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.template-expression.end.klipper-gcode"
+						}
+					},
+					"contentName": "source.klipper-script",
+					"patterns": [
+						{
+							"include": "source.klipper-script"
+						}
+					]
+				}
+			]
+		}
+	}
+}

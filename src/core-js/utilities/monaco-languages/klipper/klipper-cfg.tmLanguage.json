@@ -1,0 +1,244 @@
+{
+	"name": "klipper-cfg",
+	"scopeName": "source.klipper-cfg",
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#identifier"
+		},
+		{
+			"include": "#punctuation"
+		}
+	],
+	"repository": {
+		"comment": {
+			"begin": "#",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.begin.comment.line.klipper-cfg"
+				}
+			},
+			"end": "(?=[\\r\\n])",
+			"name": "comment.line.klipper-cfg"
+		},
+		"identifier": {
+			"patterns": [
+				{
+					"name": "meta.property-block.header.klipper-cfg",
+					"begin": "^(\\[)(include)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.brace.square.klipper-cfg"
+						},
+						"2": {
+							"name": "keyword.other.klipper-cfg"
+						}
+					},
+					"end": "\\]",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.brace.square.klipper-cfg"
+						}
+					},
+					"patterns": [
+						{
+							"name": "string.path.klipper-cfg",
+							"match": "[^\\]\\s]+"
+						}
+					]
+				},
+				{
+					"name": "meta.property-block.header.klipper-cfg",
+					"begin": "^(\\[)([_a-zA-Z][_a-zA-Z0-9]*)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.brace.square.klipper-cfg"
+						},
+						"2": {
+							"name": "keyword.other.klipper-cfg"
+						}
+					},
+					"end": "\\]",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.brace.square.klipper-cfg"
+						}
+					},
+					"patterns": [
+						{
+							"name": "entity.name.class.klipper-cfg",
+							"match": "[_a-zA-Z][_a-zA-Z0-9]*"
+						}
+					]
+				},
+				{
+					"name": "meta.pin-id.klipper-cfg",
+					"match": "(?:([_a-zA-Z][_a-zA-Z0-9]*)(:))?([!^\\b])?((?:[A-Z]{1,2}|gpio)[0-9]+)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.class.klipper-cfg"
+						},
+						"2": {
+							"name": "punctuation.accessor.klipper-cfg"
+						},
+						"3": {
+							"name": "keyword.operator.klipper-cfg"
+						},
+						"4": {
+							"name": "variable.other.enummember.klipper-cfg"
+						}
+					}
+				},
+				{
+					"name": "meta.embedded-gcode.klipper-cfg",
+					"begin": "^(gcode)(:)",
+					"beginCaptures": {
+						"1": {
+							"name": "variable.property.klipper-cfg"
+						},
+						"2": {
+							"name": "punctuation.separator.key-value.klipper-cfg"
+						}
+					},
+					"end": "(?=^\\S)",
+					"contentName": "source.klipper-gcode",
+					"patterns": [
+						{
+							"include": "source.klipper-gcode"
+						}
+					]
+				},
+				{
+					"name": "meta.property-block.entry.klipper-cfg",
+					"begin": "^([_a-zA-Z][_a-zA-Z0-9]*)(:)",
+					"beginCaptures": {
+						"1": {
+							"name": "variable.property.klipper-cfg"
+						},
+						"2": {
+							"name": "punctuation.separator.key-value.klipper-cfg"
+						}
+					},
+					"end": "(?=^\\S)",
+					"patterns": [
+						{
+							"include": "#comment"
+						},
+						{
+							"include": "#literal"
+						},
+						{
+							"include": "#identifier"
+						},
+						{
+							"include": "#punctuation"
+						}
+					]
+				},
+				{
+					"name": "variable.other.klipper-cfg",
+					"match": "\\b[_a-zA-Z][_a-zA-Z0-9]*\\b"
+				}
+			]
+		},
+		"boolLiteral": {
+			"name": "constant.language.boolean.klipper-cfg",
+			"match": "\\b[Tt]rue|[Ff]alse\\b"
+		},
+		"literal": {
+			"patterns": [
+				{
+					"include": "#boolLiteral"
+				},
+				{
+					"include": "#nullLiteral"
+				},
+				{
+					"include": "#stringLiteral"
+				},
+				{
+					"include": "#numericLiteral"
+				}
+			]
+		},
+		"nullLiteral": {
+			"name": "constant.language.null.klipper-cfg",
+			"match": "\\b[Nn]one\\b"
+		},
+		"numericLiteral": {
+			"name": "constant.numeric.klipper-cfg",
+			"match": "(-)?(?:[0-9]+(?:(\\.)[0-9]+)?|(\\.)[0-9]+)",
+			"captures": {
+				"1": {
+					"name": "keyword.operator.negative.klipper-cfg"
+				},
+				"2": {
+					"name": "meta.delimiter.decimal.period.klipper-cfg"
+				},
+				"3": {
+					"name": "meta.delimiter.decimal.period.klipper-cfg"
+				}
+			}
+		},
+		"stringLiteral": {
+			"patterns": [
+				{
+					"name": "string.klipper-cfg",
+					"begin": "[\"']",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.klipper-cfg"
+						}
+					},
+					"end": "(?<!\\\\)(\\1)|\\\\\\\\(\\1)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.klipper-cfg"
+						},
+						"2": {
+							"name": "punctuation.definition.string.end.klipper-cfg"
+						}
+					}
+				},
+				{
+					"name": "string.path.klipper-cfg",
+					"match": "(\\/[_a-zA-Z][_a-zA-Z0-9]*)+"
+				}
+			]
+		},
+		"punctuation": {
+			"patterns": [
+				{
+					"match": "[()]",
+					"name": "punctuation.brace.round.klipper-cfg"
+				},
+				{
+					"match": "[{}]",
+					"name": "punctuation.brace.curly.klipper-cfg"
+				},
+				{
+					"match": "[\\[\\]]",
+					"name": "punctuation.brace.square.klipper-cfg"
+				},
+				{
+					"match": ",",
+					"name": "punctuation.separator.comma.klipper-cfg"
+				},
+				{
+					"match": ":",
+					"name": "punctuation.separator.key-value.klipper-cfg"
+				},
+				{
+					"match": "\\.",
+					"name": "punctuation.accessor.klipper-cfg"
+				},
+				{
+					"match": ";",
+					"name": "punctuation.terminator.klipper-cfg"
+				}
+			]
+		}
+	}
+}
