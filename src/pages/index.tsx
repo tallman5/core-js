@@ -9,7 +9,7 @@ const HomePage = () => {
       <div className='container'>
         <div className='row'>
           <div className="col">
-            <h1>core-js Test Site</h1>
+            <h1>Home</h1>
             <p>This site is used simply for testing some of the core-js components</p>
             <table className="table">
               <tbody>

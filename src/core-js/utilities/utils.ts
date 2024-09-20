@@ -15,6 +15,22 @@ export function base64urlDecode(base64url: string): string {
     return decoded;
 }
 
+export async function copyToClipboard(text: string): Promise<void> {
+    if (navigator.clipboard && window.isSecureContext) {
+        // Use the modern Clipboard API if available and the site is running on HTTPS
+        try {
+            await navigator.clipboard.writeText(text);
+            console.log('Text copied to clipboard successfully (via Clipboard API)');
+        } catch (error) {
+            console.error('Clipboard API failed, falling back to execCommand:', error);
+            fallbackCopyToClipboard(text);
+        }
+    } else {
+        // Fallback for non-HTTPS sites or browsers without Clipboard API support
+        fallbackCopyToClipboard(text);
+    }
+}
+
 /**
  * Decodes a JWT and returns the payload as a JavaScript object.
  * @param token - The JWT string.
@@ -40,6 +56,30 @@ export function decodeJWT(token: string): Jwt {
 
 export function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export const emptyGuid = "00000000-0000-0000-0000-000000000000";
+
+export function fallbackCopyToClipboard(text: string): void {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+
+    // Make the textarea invisible and append it to the document
+    textArea.style.position = "fixed";  // Avoid scrolling to the bottom of the page
+    textArea.style.opacity = "0";       // Hide the textarea
+    document.body.appendChild(textArea);
+
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        console.log(successful ? 'Fallback: Text copied successfully!' : 'Fallback: Text copy failed.');
+    } catch (error) {
+        console.error('Fallback: Could not copy text', error);
+    }
+
+    document.body.removeChild(textArea);  // Clean up the DOM
 }
 
 /**
@@ -69,6 +109,17 @@ export function generateGUID(): string {
     }
 
     return guid;
+}
+
+export function getStorageItem(key: string) {
+    let returnValue = null;
+    if (isBrowser) {
+        const storageItem = window.localStorage.getItem(key);
+        if (storageItem) {
+            returnValue = JSON.parse(storageItem);
+        }
+    }
+    return returnValue;
 }
 
 /**
@@ -130,6 +181,11 @@ export function loadScript(url: string): Promise<boolean> {
         document.body.appendChild(script);
     });
 };
+
+export function setStorageItem(key: string, obj: any) {
+    const serializedObj = JSON.stringify(obj);
+    window.localStorage.setItem(key, serializedObj);
+}
 
 export function toValidHtmlId(str: string): string {
     // Replace invalid characters with underscores

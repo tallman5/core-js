@@ -18,7 +18,7 @@ const Header = () => {
                 <div className="container">
                     <Link className="navbar-brand" to='/'>
                         <img src='/icon.png' alt={'m'} width={32} />
-                        <span style={{ marginLeft: '5px' }}>printerfig.com</span>
+                        <span style={{ marginLeft: '10px' }}>core-js Test Site</span>
                     </Link>
                     <button className={"navbar-toggler"} type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
