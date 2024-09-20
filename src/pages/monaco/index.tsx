@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Layout from '../../components/layout';
-import { loadKlipperLanguage, loadMonaco, Monaco } from '../../core-js';
+import { klipperCustomConfig, loadCustomConfiguration, loadMonaco, Monaco } from '../../core-js';
 import { editor } from 'monaco-editor';
 
 const MonacoIndex = () => {
@@ -13,14 +13,17 @@ const MonacoIndex = () => {
         if (!colARef.current) return;
 
         loadMonaco().then((m) => {
-            loadKlipperLanguage(m);
-            const sae = m.editor.create(colARef.current!,
-                {
-                    language: 'klipper-cfg',
-                    theme: 'klip-dark'
+            const kLangs = klipperCustomConfig;
+            loadCustomConfiguration(m, kLangs)
+                .then((b) => {
+                    const standAloneEditor = m.editor.create(colARef.current!,
+                        {
+                            language: 'klipper-cfg',
+                            theme: 'klip-dark'
+                        });
+                    setMonaco(m);
+                    setMEditor(standAloneEditor);
                 });
-            setMonaco(m);
-            setMEditor(sae);
         });
     }, [monaco, colARef]);
 

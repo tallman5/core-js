@@ -2,44 +2,34 @@ import { loadWASM, OnigRegExp, } from "onigasm";
 import * as monaco from 'monaco-editor';
 export type Monaco = typeof monaco;
 import { loadScript } from "./utils";
-import { editor, languages } from "monaco-editor";
-import klipDark from './monaco-languages/klipper/klipper-theme-dark-web.json';
-import cfgConfig from './monaco-languages/klipper/klipper-cfg.config.json';
-import gcodeConfig from './monaco-languages/klipper/klipper-gcode.config.json';
 import { Registry } from "monaco-textmate";
-import cfgLanguage from './monaco-languages/klipper/klipper-cfg.tmLanguage.json';
-import gcodeLanguage from './monaco-languages/klipper/klipper-gcode.tmLanguage.json';
-import scriptLanguage from './monaco-languages/klipper/klipper-script.tmLanguage.json';
 import { wireTmGrammars } from "monaco-editor-textmate";
+import { ICustomMonacoConfig } from "./monaco-languages";
 
-export function loadKlipperLanguage(m: Monaco): Promise<boolean> {
+export function loadCustomConfiguration(m: Monaco, config: ICustomMonacoConfig) {
     return new Promise(async (resolve, reject) => {
         try {
-            m.editor.defineTheme('klip-dark', klipDark as editor.IStandaloneThemeData);
+            if (config.themes) {
+                config.themes.forEach((value, key) => {
+                    m.editor.defineTheme(key, value);
+                });
+            }
 
-            m.languages.register({ id: 'klipper-cfg' });
-            m.languages.register({ id: 'klipper-gcode' });
-            m.languages.register({ id: 'klipper-script' });
-
-            m.languages.setLanguageConfiguration('klipper-cfg', cfgConfig as languages.LanguageConfiguration);
-            m.languages.setLanguageConfiguration('klipper-gcode', gcodeConfig as languages.LanguageConfiguration);
+            if (config.languages) {
+                config.languages.forEach((lang) => {
+                    m.languages.register({ id: lang.id });
+                    if (lang.configuration)
+                        m.languages.setLanguageConfiguration(lang.id, lang.configuration);
+                });
+            }
 
             const registry = new Registry({
                 getGrammarDefinition: async (scopeName: string): Promise<any> => {
-
                     let content: any;
-                    switch (scopeName) {
-                        case "source.klipper-cfg":
-                            content = cfgLanguage;
-                            break;
-                        case "source.klipper-gcode":
-                            content = gcodeLanguage;
-                            break;
-                        case "source.klipper-script":
-                            content = scriptLanguage;
-                            break;
-                    };
-
+                    config.languages.forEach((lang) => {
+                        if (lang.scope === scopeName)
+                            content = lang.grammer;
+                    });
                     const res: any = {
                         format: 'json',
                         content: content,
@@ -48,12 +38,13 @@ export function loadKlipperLanguage(m: Monaco): Promise<boolean> {
                 },
             });
 
-            wireTmGrammars(m, registry, new Map([
-                ['klipper-cfg', 'source.klipper-cfg'],
-                ['klipper-gcode', 'source.klipper-gcode'],
-                ['klipper-script', 'source.klipper-script']
-              ]));
-          
+            const languagesMap = config.languages.reduce((map, lang) => {
+                map.set(lang.id, lang.scope);
+                return map;
+            }, new Map<string, string>());
+
+            wireTmGrammars(m, registry, languagesMap);
+
             resolve(true);
         }
         catch (err) {
@@ -76,8 +67,9 @@ export function loadMonaco(): Promise<Monaco> {
                 });
 
                 require(['vs/editor/editor.main'], function (monaco: Monaco) {
-                    if (monaco)
+                    if (monaco) {
                         resolve(monaco);
+                    }
                 });
             } else {
                 // Sometimes 'require' is undefined ?????
