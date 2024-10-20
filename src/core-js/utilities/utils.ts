@@ -1,4 +1,4 @@
-import { Jwt } from '../models/jwt.model';
+import { Jwt } from "../models";
 
 /**
  * Decodes a base64url string.
