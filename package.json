@@ -1,6 +1,6 @@
 {
   "name": "@tallman5/core-js",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Reusable JavaScript components and services",
   "author": "Joseph McGurkin <joseph@mcgurkin.net>",
   "main": "dist/index.js",
