@@ -1,15 +1,20 @@
 {
   "name": "@tallman5/core-js",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Reusable JavaScript components and services",
   "author": "Joseph McGurkin <joseph@mcgurkin.net>",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "license": "ISC",
   "files": [
     "/dist",
     "!/dist/**/*.js.map",
     "!/dist/**/*.tsbuildinfo"
   ],
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs"
+  },
+  "module": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tallman5/core-js"
