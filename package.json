@@ -1,6 +1,6 @@
 {
   "name": "@tallman5/core-js",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Reusable JavaScript components and services",
   "author": "Joseph McGurkin <joseph@mcgurkin.net>",
   "main": "dist/index.js",
@@ -25,8 +25,7 @@
     "clean": "gatsby clean",
     "develop": "gatsby develop",
     "dist": "tsc --project tsconfig.build.json",
-    "distpack": "tsc --project tsconfig.build.json && npm pack",
-    "publish": "npm publish --access=public",
+    "distpackpub": "tsc --project tsconfig.build.json && npm pack && npm publish --access=public",
     "serve": "gatsby serve",
     "start": "gatsby develop",
     "test": "jest",

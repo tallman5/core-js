@@ -93,7 +93,7 @@ export function fallbackCopyToClipboard(text: string): void {
  * Generates a UUID according to v4 spec.
  * @returns A string in the format of 00000000-0000-0000-0000-000000000000.
  */
-export function generateGUID(): string {
+export function generateUuid(): string {
     const hexValues = "0123456789abcdef";
 
     // Create an array to hold the random values

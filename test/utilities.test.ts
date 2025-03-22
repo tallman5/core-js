@@ -1,4 +1,4 @@
-import { decodeJWT, getLongDate, isNullOrWhitespace } from "../src/core-js/utilities";
+import { decodeJWT, generateUuid, getLongDate, isNullOrWhitespace } from "../src/core-js/utilities";
 
 describe('Utilites', () => {
     it('token screen name should be decoded', () => {
@@ -31,9 +31,14 @@ describe('Utilites', () => {
         const rs = isNullOrWhitespace(undefined);
         expect(rs).toBeTruthy();
     });
-    
+
     it('string should return true', () => {
         const rs = isNullOrWhitespace(null);
         expect(rs).toBeTruthy();
+    });
+
+    it('should create a UUID', () => {
+        const id = generateUuid();
+        expect(id.length).toEqual('00000000-0000-0000-0000-000000000000'.length);
     });
 });
