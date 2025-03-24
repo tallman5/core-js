@@ -1,6 +1,6 @@
 {
   "name": "@tallman5/core-js",
-  "version": "1.0.13",
+  "version": "1.0.15",
   "description": "Reusable JavaScript components and services",
   "author": "tallman5",
   "repository": {
@@ -11,24 +11,28 @@
   "bugs": {
     "url": "https://github.com/tallman5/core-js/issues"
   },
-  "main": "index.js",
-  "files": [
-    "/dist",
-    "!/dist/**/*.js.map",
-    "!/dist/**/*.tsbuildinfo"
-  ],
+  "keywords": [],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.js"
+  },
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "build": "tsc",
+    "buildpackpub": "tsc && npm pack && npm publish --access=public",
     "coverage": "vitest --coverage",
-    "distpackpub": "tsc && npm pack && npm publish --access=public",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
-  "keywords": [],
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.13.12",
     "@vitest/coverage-v8": "^3.0.9",
+    "jsdom": "^26.0.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
   },
