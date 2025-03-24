@@ -1,20 +1,8 @@
 {
   "name": "@tallman5/core-js",
-  "version": "1.0.11",
+  "version": "1.0.13",
   "description": "Reusable JavaScript components and services",
-  "author": "Joseph McGurkin <joseph@mcgurkin.net>",
-  "main": "dist/index.cjs",
-  "license": "ISC",
-  "files": [
-    "/dist",
-    "!/dist/**/*.js.map",
-    "!/dist/**/*.tsbuildinfo"
-  ],
-  "exports": {
-    "import": "./dist/index.js",
-    "require": "./dist/index.cjs"
-  },
-  "module": "./dist/index.js",
+  "author": "tallman5",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tallman5/core-js"
@@ -23,38 +11,31 @@
   "bugs": {
     "url": "https://github.com/tallman5/core-js/issues"
   },
-  "keywords": [],
+  "main": "index.js",
+  "files": [
+    "/dist",
+    "!/dist/**/*.js.map",
+    "!/dist/**/*.tsbuildinfo"
+  ],
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "gatsby build",
-    "clean": "gatsby clean",
-    "develop": "gatsby develop",
-    "dist": "tsc --project tsconfig.build.json",
-    "distpackpub": "tsc --project tsconfig.build.json && npm pack && npm publish --access=public",
-    "serve": "gatsby serve",
-    "start": "gatsby develop",
-    "test": "jest",
-    "typecheck": "tsc --noEmit"
+    "build": "tsc",
+    "coverage": "vitest --coverage",
+    "distpackpub": "tsc && npm pack && npm publish --access=public",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.13.12",
+    "@vitest/coverage-v8": "^3.0.9",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
   },
   "dependencies": {
-    "monaco-editor": "^0.51.0",
+    "monaco-editor": "^0.52.2",
     "monaco-editor-textmate": "^4.0.0",
     "monaco-textmate": "^3.0.1",
     "onigasm": "^2.2.5"
-  },
-  "devDependencies": {
-    "@types/jest": "^29.5.13",
-    "@types/node": "^20.11.19",
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
-    "bootstrap": "^5.3.3",
-    "gatsby": "^5.13.7",
-    "gatsby-plugin-purgecss": "^6.2.1",
-    "jest": "^29.7.0",
-    "path-browserify": "^1.0.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "ts-jest": "^29.2.5",
-    "typescript": "^5.3.3"
   }
 }

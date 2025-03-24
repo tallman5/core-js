@@ -43,7 +43,7 @@ export async function copyToClipboard(text: string): Promise<void> {
  * @param token - The JWT string.
  * @returns The decoded payload as a Jwt.
  */
-export function decodeJWT(token: string): Jwt {
+export function decodeJwt(token: string): Jwt {
     try {
         const [header, payload, signature] = token.split('.');
         if (!header || !payload || !signature) {
@@ -65,7 +65,7 @@ export function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const emptyGuid = "00000000-0000-0000-0000-000000000000";
+export const emptyUuid = "00000000-0000-0000-0000-000000000000";
 
 export function fallbackCopyToClipboard(text: string): void {
     const textArea = document.createElement("textarea");
