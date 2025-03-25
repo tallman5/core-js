@@ -1,6 +1,6 @@
 {
   "name": "@tallman5/core-js",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Reusable JavaScript components and services",
   "author": "tallman5",
   "repository": {
@@ -12,7 +12,6 @@
     "url": "https://github.com/tallman5/core-js/issues"
   },
   "keywords": [],
-  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
