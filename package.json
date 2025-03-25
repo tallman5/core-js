@@ -1,6 +1,6 @@
 {
   "name": "@tallman5/core-js",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Reusable JavaScript components and services",
   "author": "tallman5",
   "repository": {
@@ -19,7 +19,9 @@
     "import": "./dist/index.js"
   },
   "files": [
-    "/dist"
+    "/dist",
+    "!/dist/**/*.js.map",
+    "!/dist/**/*.tsbuildinfo"
   ],
   "scripts": {
     "build": "tsc",
