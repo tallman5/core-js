@@ -1,26 +1,21 @@
-export type EventHandler = (...args: any[]) => void;
+export type EventHandler<T = any> = (...args: T[]) => void;
 
-export enum Events {
-    AppUserChanged, 
-    NotificationsUpdated,
-};
+export class EventEmitter<TEvents extends Record<string, any>> {
+    private events: { [K in keyof TEvents]?: EventHandler<TEvents[K]>[] } = {};
 
-export class EventEmitter {
-    private events: { [key in Events]?: EventHandler[] } = {};
-
-    on(event: Events, listener: EventHandler) {
+    on<K extends keyof TEvents>(event: K, listener: EventHandler<TEvents[K]>) {
         if (!this.events[event]) {
             this.events[event] = [];
         }
         this.events[event]?.push(listener);
     }
 
-    off(event: Events, listener: EventHandler) {
+    off<K extends keyof TEvents>(event: K, listener: EventHandler<TEvents[K]>) {
         if (!this.events[event]) return;
         this.events[event] = this.events[event]?.filter(l => l !== listener);
     }
 
-    emit(event: Events, ...args: any[]) {
+    emit<K extends keyof TEvents>(event: K, ...args: TEvents[K][]) {
         this.events[event]?.forEach(listener => listener(...args));
     }
 }

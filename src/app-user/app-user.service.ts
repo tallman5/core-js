@@ -1,11 +1,14 @@
-import { EventEmitter, Events } from "../event-emitter";
-// import { NotificationsService } from "../notifications";
+import { EventEmitter } from "../event-emitter";
 import { IAppUser } from "./app-user.model";
+
+type AppUserEvents = {
+    AppUserChanged: IAppUser;
+};
 
 export class AppUserService {
     private appUser: IAppUser;
 
-    constructor(private eventEmitter: EventEmitter) {
+    constructor(private eventEmitter: EventEmitter<AppUserEvents>) {
         this.appUser = {
             username: 'guest'
         };
@@ -15,7 +18,7 @@ export class AppUserService {
         this.appUser = {
             username: 'guest'
         };
-        this.eventEmitter.emit(Events.AppUserChanged, this.appUser);
+        this.eventEmitter.emit("AppUserChanged", this.appUser);
     }
 
     getAppUser(): IAppUser {
@@ -24,6 +27,6 @@ export class AppUserService {
 
     setAppUser(newUser: IAppUser) {
         this.appUser = newUser;
-        this.eventEmitter.emit(Events.AppUserChanged, this.appUser);
+        this.eventEmitter.emit("AppUserChanged", this.appUser);
     }
 };

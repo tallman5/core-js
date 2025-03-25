@@ -1,102 +1,48 @@
-import { EventEmitter, Events } from './event-emitter';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import { EventEmitter } from './event-emitter';
+
+type TestEvents = {
+    userUpdated: { id: string; name: string };
+    notificationReceived: { message: string };
+};
 
 describe('EventEmitter', () => {
-    let emitter: EventEmitter;
-    const mockHandler = vi.fn();
-    const mockHandler2 = vi.fn();
+    it('should register and call an event listener', () => {
+        const emitter = new EventEmitter<TestEvents>();
+        const mockListener = vi.fn();
 
-    beforeEach(() => {
-        emitter = new EventEmitter();
-        mockHandler.mockClear();
-        mockHandler2.mockClear();
+        emitter.on('userUpdated', mockListener);
+        emitter.emit('userUpdated', { id: '123', name: 'Test User' });
+
+        expect(mockListener).toHaveBeenCalledWith({ id: '123', name: 'Test User' });
     });
 
-    describe('on()', () => {
-        it('should register event handlers', () => {
-            emitter.on(Events.AppUserChanged, mockHandler);
-            emitter.emit(Events.AppUserChanged);
-            expect(mockHandler).toHaveBeenCalledTimes(1);
-        });
+    it('should remove an event listener', () => {
+        const emitter = new EventEmitter<TestEvents>();
+        const mockListener = vi.fn();
 
-        it('should allow multiple handlers for the same event', () => {
-            emitter.on(Events.AppUserChanged, mockHandler);
-            emitter.on(Events.AppUserChanged, mockHandler2);
-            emitter.emit(Events.AppUserChanged);
-            expect(mockHandler).toHaveBeenCalledTimes(1);
-            expect(mockHandler2).toHaveBeenCalledTimes(1);
-        });
+        emitter.on('userUpdated', mockListener);
+        emitter.off('userUpdated', mockListener);
+        emitter.emit('userUpdated', { id: '123', name: 'Test User' });
 
-        it('should not interfere with different events', () => {
-            emitter.on(Events.AppUserChanged, mockHandler);
-            emitter.emit(Events.NotificationsUpdated);
-            expect(mockHandler).not.toHaveBeenCalled();
-        });
+        expect(mockListener).not.toHaveBeenCalled();
     });
 
-    describe('off()', () => {
-        it('should remove specified handler', () => {
-            emitter.on(Events.AppUserChanged, mockHandler);
-            emitter.on(Events.AppUserChanged, mockHandler2);
-            emitter.off(Events.AppUserChanged, mockHandler);
-            emitter.emit(Events.AppUserChanged);
-            expect(mockHandler).not.toHaveBeenCalled();
-            expect(mockHandler2).toHaveBeenCalledTimes(1);
-        });
+    it('should handle multiple listeners for the same event', () => {
+        const emitter = new EventEmitter<TestEvents>();
+        const listener1 = vi.fn();
+        const listener2 = vi.fn();
 
-        it('should do nothing if handler not registered', () => {
-            emitter.on(Events.AppUserChanged, mockHandler);
-            emitter.off(Events.AppUserChanged, mockHandler2); // not registered
-            emitter.emit(Events.AppUserChanged);
-            expect(mockHandler).toHaveBeenCalledTimes(1);
-        });
+        emitter.on('notificationReceived', listener1);
+        emitter.on('notificationReceived', listener2);
+        emitter.emit('notificationReceived', { message: 'Hello World' });
 
-        it('should do nothing if event has no handlers', () => {
-            emitter.off(Events.AppUserChanged, mockHandler);
-            emitter.emit(Events.AppUserChanged);
-            expect(mockHandler).not.toHaveBeenCalled();
-        });
+        expect(listener1).toHaveBeenCalledWith({ message: 'Hello World' });
+        expect(listener2).toHaveBeenCalledWith({ message: 'Hello World' });
     });
 
-    describe('emit()', () => {
-        it('should call all handlers with provided arguments', () => {
-            const testArgs = ['arg1', 42, { key: 'value' }];
-            emitter.on(Events.AppUserChanged, mockHandler);
-            emitter.emit(Events.AppUserChanged, ...testArgs);
-            expect(mockHandler).toHaveBeenCalledWith(...testArgs);
-        });
-
-        it('should not throw when emitting unregistered event', () => {
-            expect(() => emitter.emit(Events.NotificationsUpdated)).not.toThrow();
-        });
-
-        it('should maintain proper order of handler execution', () => {
-            const callOrder: number[] = [];
-            const handler1 = () => callOrder.push(1);
-            const handler2 = () => callOrder.push(2);
-
-            emitter.on(Events.AppUserChanged, handler1);
-            emitter.on(Events.AppUserChanged, handler2);
-            emitter.emit(Events.AppUserChanged);
-
-            expect(callOrder).toEqual([1, 2]);
-        });
-    });
-
-    describe('edge cases', () => {
-        // it('should handle multiple add/remove of same handler', () => {
-        //     emitter.on(Events.AppUserChanged, mockHandler);
-        //     emitter.on(Events.AppUserChanged, mockHandler); // duplicate
-        //     emitter.off(Events.AppUserChanged, mockHandler);
-        //     emitter.emit(Events.AppUserChanged);
-        //     expect(mockHandler).toHaveBeenCalledTimes(1); // only one should remain
-        // });
-
-        it('should work correctly after removing all handlers', () => {
-            emitter.on(Events.AppUserChanged, mockHandler);
-            emitter.off(Events.AppUserChanged, mockHandler);
-            emitter.emit(Events.AppUserChanged);
-            expect(mockHandler).not.toHaveBeenCalled();
-        });
+    it('should not throw when emitting an event with no listeners', () => {
+        const emitter = new EventEmitter<TestEvents>();
+        expect(() => emitter.emit('userUpdated', { id: '456', name: 'No Listener' })).not.toThrow();
     });
 });

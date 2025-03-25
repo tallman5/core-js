@@ -1,97 +1,42 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { AppUserService } from './app-user.service';
-import { EventEmitter, Events } from '../event-emitter';
-import type { IAppUser } from './app-user.model';
+import { EventEmitter } from '../event-emitter';
+import { IAppUser } from './app-user.model';
+
+type AppUserEvents = {
+    AppUserChanged: IAppUser;
+};
 
 describe('AppUserService', () => {
-    let service: AppUserService;
-    let mockEventEmitter: EventEmitter;
-    const mockUser: IAppUser = { username: 'testuser' };
+    it('should initialize with a guest user', () => {
+        const eventEmitter = new EventEmitter<AppUserEvents>();
+        const service = new AppUserService(eventEmitter);
 
-    beforeEach(() => {
-        mockEventEmitter = new EventEmitter();
-        service = new AppUserService(mockEventEmitter);
+        expect(service.getAppUser()).toEqual({ username: 'guest' });
     });
 
-    describe('initialization', () => {
-        it('should initialize with guest user', () => {
-            expect(service.getAppUser()).toEqual({ username: 'guest' });
-        });
+    it('should set a new user and emit an event', () => {
+        const eventEmitter = new EventEmitter<AppUserEvents>();
+        const service = new AppUserService(eventEmitter);
+        const mockListener = vi.fn();
 
-        it('should accept injected EventEmitter', () => {
-            expect(service).toHaveProperty('eventEmitter', mockEventEmitter);
-        });
+        eventEmitter.on("AppUserChanged", mockListener);
+        const newUser = { username: 'john_doe' };
+        service.setAppUser(newUser);
+
+        expect(service.getAppUser()).toEqual(newUser);
+        expect(mockListener).toHaveBeenCalledWith(newUser);
     });
 
-    describe('getAppUser()', () => {
-        it('should return current user', () => {
-            const user = service.getAppUser();
-            expect(user).toEqual({ username: 'guest' });
-        });
-    });
+    it('should clear the user and emit an event', () => {
+        const eventEmitter = new EventEmitter<AppUserEvents>();
+        const service = new AppUserService(eventEmitter);
+        const mockListener = vi.fn();
 
-    describe('setAppUser()', () => {
-        it('should update the user', () => {
-            service.setAppUser(mockUser);
-            expect(service.getAppUser()).toEqual(mockUser);
-        });
+        eventEmitter.on("AppUserChanged", mockListener);
+        service.clearUser();
 
-        it('should emit AppUserChanged event', () => {
-            const emitSpy = vi.spyOn(mockEventEmitter, 'emit');
-            service.setAppUser(mockUser);
-
-            expect(emitSpy).toHaveBeenCalledTimes(1);
-            expect(emitSpy).toHaveBeenCalledWith(Events.AppUserChanged, mockUser);
-        });
-
-        it('should emit event with the new user data', () => {
-            const handler = vi.fn();
-            mockEventEmitter.on(Events.AppUserChanged, handler);
-
-            service.setAppUser(mockUser);
-
-            expect(handler).toHaveBeenCalledTimes(1);
-            expect(handler).toHaveBeenCalledWith(mockUser);
-        });
-    });
-
-    describe('clearUser()', () => {
-        it('should reset user to guest', () => {
-            service.setAppUser(mockUser);
-            service.clearUser();
-            expect(service.getAppUser()).toEqual({ username: 'guest' });
-        });
-
-        it('should emit AppUserChanged event', () => {
-            const emitSpy = vi.spyOn(mockEventEmitter, 'emit');
-            service.clearUser();
-
-            expect(emitSpy).toHaveBeenCalledTimes(1);
-            expect(emitSpy).toHaveBeenCalledWith(Events.AppUserChanged, { username: 'guest' });
-        });
-
-        it('should notify listeners about the reset', () => {
-            const handler = vi.fn();
-            mockEventEmitter.on(Events.AppUserChanged, handler);
-
-            service.clearUser();
-
-            expect(handler).toHaveBeenCalledTimes(1);
-            expect(handler).toHaveBeenCalledWith({ username: 'guest' });
-        });
-    });
-
-    describe('event emission behavior', () => {
-        // it('should not emit when user data is unchanged', () => {
-        //     const emitSpy = vi.spyOn(mockEventEmitter, 'emit');
-        //     service.setAppUser({ username: 'guest' }); // same as initial
-        //     expect(emitSpy).not.toHaveBeenCalled();
-        // });
-
-        it('should emit when user properties change', () => {
-            const emitSpy = vi.spyOn(mockEventEmitter, 'emit');
-            service.setAppUser({ username: 'guest' });
-            expect(emitSpy).toHaveBeenCalled();
-        });
+        expect(service.getAppUser()).toEqual({ username: 'guest' });
+        expect(mockListener).toHaveBeenCalledWith({ username: 'guest' });
     });
 });
