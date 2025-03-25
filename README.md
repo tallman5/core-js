@@ -1,4 +1,4 @@
-# @tallman5/core-js
+# @tallman5/core-esm
 Stuff I use all the time.
 
 ## Monaco Editor with Custom Grammers
